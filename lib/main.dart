@@ -3,12 +3,31 @@ import 'package:flutter/material.dart';
 void main() =>
     runApp(MyApp()); //For only one expression method can be right be like this
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+
+    return MyAppState();
+  }
+
+}
+
+class MyAppState extends State<MyApp> {
+  var index = 0;
+
   void answerQuestion() {
+    setState(() {
+      index += 1;
+    });
+
     print('Answer chosen!');
   }
   @override
   Widget build(BuildContext context) {
+    var questions = [
+      'What\'s your favorite color?',
+      'What\'s your favorite animal?',
+    ];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -16,7 +35,7 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Text('The Question'),
+            Text(questions [index]),
             RaisedButton(
               child: Text('Answer 1'),
               onPressed: answerQuestion,
