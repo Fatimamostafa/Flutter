@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_basics/question.dart';
 
-void main() =>
-    runApp(MyApp()); //For only one expression method can be right be like this
+void main() => runApp(MyApp()); //For only one expression method can be right be like this
 
 class MyApp extends StatefulWidget {
   @override
@@ -13,11 +13,11 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  var index = 0;
+  var _index = 0;
 
-  void answerQuestion() {
+  void _answerQuestion() {
     setState(() {
-      index += 1;
+      _index += 1;
     });
 
     print('Answer chosen!');
@@ -35,10 +35,10 @@ class MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Text(questions [index]),
+            Question(questions [_index]),
             RaisedButton(
               child: Text('Answer 1'),
-              onPressed: answerQuestion,
+              onPressed: _answerQuestion,
             ),
             RaisedButton(
               child: Text('Answer 2'),
