@@ -1,4 +1,4 @@
-# flutter_basics
+# Flutter Explorations
 
 A new Flutter application.
 
