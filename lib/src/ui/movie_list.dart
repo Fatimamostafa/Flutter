@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basics/src/blocs/movie_detail_bloc_provider.dart';
 import 'package:flutter_basics/src/blocs/movies_bloc.dart';
+import 'package:flutter_basics/src/models/company_haltrip.dart';
 import 'package:flutter_basics/src/models/item.dart';
+import 'package:flutter_basics/src/resources/dio.dart';
 
 import 'movie_detail.dart';
 
@@ -17,7 +19,9 @@ class MovieListState extends State<MovieList> {
   @override
   void initState() {
     super.initState();
-    bloc.fetchAllMovies();
+    DioSingleton.instance.create();
+   // bloc.fetchAllMovies();
+    bloc.fetchCompany();
   }
 
   @override
@@ -33,8 +37,8 @@ class MovieListState extends State<MovieList> {
         title: Text('Popular Movies'),
       ),
       body: StreamBuilder(
-        stream: bloc.allMovies,
-        builder: (context, AsyncSnapshot<ItemModel> snapshot) {
+        stream: bloc.allCompanyData,
+        builder: (context, AsyncSnapshot<Company> snapshot) {
           if (snapshot.hasData) {
             return buildList(snapshot);
           } else if (snapshot.hasError) {
@@ -46,9 +50,9 @@ class MovieListState extends State<MovieList> {
     );
   }
 
-  Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
+  Widget buildList(AsyncSnapshot<Company> snapshot) {
     return GridView.builder(
-        itemCount: snapshot.data.results.length,
+        itemCount: snapshot.data.attributes.promos.length,
         gridDelegate:
         new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
@@ -56,11 +60,10 @@ class MovieListState extends State<MovieList> {
             child: InkResponse(
               enableFeedback: true,
               child: Image.network(
-                'https://image.tmdb.org/t/p/w185${snapshot.data
-                    .results[index].poster_path}',
+                snapshot.data.attributes.promos[index].image,
                 fit: BoxFit.cover,
               ),
-              onTap: () => openDetailPage(snapshot.data, index),
+           //   onTap: () => openDetailPage(snapshot.data, index),
             ),
           );
         });
@@ -83,4 +86,6 @@ class MovieListState extends State<MovieList> {
       }),
     );
   }
+
+
 }

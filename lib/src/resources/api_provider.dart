@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_basics/src/models/company_haltrip.dart';
 import 'package:flutter_basics/src/models/item.dart';
 import 'package:flutter_basics/src/models/trailer.dart';
 import 'package:http/http.dart' show Client;
@@ -34,4 +35,22 @@ class MovieApiProvider {
       throw Exception('Failed to load trailers');
     }
   }
+
+
+
+  Future<Company> fetchCompany() async {
+    print("entered");
+    final response = await client
+        .get("http://august.travnx.com/api/company");
+    print(response.body.toString());
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      return Company.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+
+
 }
