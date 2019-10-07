@@ -30,6 +30,7 @@ class MoviesBloc {
           .fetchCompany()
           .then((response) {
         Company companyModel = response;
+        print('PROMO IMAGE: ${companyModel.attributes.promos[0].image}');
         _companyFetcher.sink.add(companyModel);
       }).catchError((error) {
         print("Error:"+error.toString());

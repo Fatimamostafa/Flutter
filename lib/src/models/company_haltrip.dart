@@ -8,8 +8,8 @@ class Company {
   Company.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
-    attributes = json['attributes'] != null
-        ? new Attributes.fromJson(json['attributes'])
+    attributes = json['data']['attributes'] != null
+        ? Attributes.fromJson(json['data']['attributes'])
         : null;
   }
 
@@ -334,20 +334,50 @@ class Guest {
 class User {
   String title;
   String out;
- // List<Drop> drop;
+  List<Drop> drop;
 
   User({this.title, this.out});
 
   User.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     out = json['out'];
-
+    if (json['drop'] != null) {
+      drop = new List<Drop>();
+      json['drop'].forEach((v) {
+        drop.add(new Drop.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
     data['out'] = this.out;
+    if (this.drop != null) {
+      data['drop'] = this.drop.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Drop {
+  String title;
+  String route;
+  bool enabled;
+
+  Drop({this.title, this.route, this.enabled});
+
+  Drop.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    route = json['route'];
+    enabled = json['enabled'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = this.title;
+    data['route'] = this.route;
+    data['enabled'] = this.enabled;
     return data;
   }
 }
