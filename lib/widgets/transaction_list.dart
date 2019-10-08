@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basics/widgets/transaction_item.dart';
-import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
@@ -20,7 +19,7 @@ class TransactionList extends StatelessWidget {
                   'No transactions added yet!',
                   style: Theme.of(context).textTheme.title,
                 ),
-               const SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -32,13 +31,14 @@ class TransactionList extends StatelessWidget {
               ],
             );
           })
-        : ListView.builder(
-            itemBuilder: (ctx, index) {
-              return TransactionItem(transaction: transactions[index], deleteTx: deleteTx);
-            },
-            itemCount: transactions.length,
+        : ListView(
+            children: transactions
+                .map((tx) => TransactionItem(
+                      key: ValueKey(tx.id),
+                      transaction: tx,
+                      deleteTx: deleteTx,
+                    ))
+                .toList(),
           );
   }
 }
-
-
