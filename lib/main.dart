@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_basics/utils/SizeConfig.dart';
 import 'package:flutter_basics/widgets/transaction_list.dart';
@@ -16,6 +17,7 @@ void main() {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,21 +29,21 @@ class MyApp extends StatelessWidget {
           // errorColor: Colors.red,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                button: TextStyle(color: Colors.white),
-              ),
+            title: TextStyle(
+              fontFamily: 'OpenSans',
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            button: TextStyle(color: Colors.white),
+          ),
           appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
-                  title: TextStyle(
-                    fontFamily: 'OpenSans',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              title: TextStyle(
+                fontFamily: 'OpenSans',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           )),
       home: MyHomePage(),
     );
@@ -70,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
     //   date: DateTime.now(),
     // ),
   ];
-
   bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
@@ -118,10 +119,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     final mediaQuery = MediaQuery.of(context);
-    final isLandscape = SizeConfig.orientation == Orientation.landscape;
-    final appBar = AppBar(
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+      middle: Text(
+        'Personal Expenses',
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          GestureDetector(
+            child: Icon(CupertinoIcons.add),
+            onTap: () => _startAddNewTransaction(context),
+          ),
+        ],
+      ),
+    )
+        : AppBar(
       title: Text(
         'Personal Expenses',
       ),
@@ -133,24 +148,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
     final txListWidget = Container(
-      height: (SizeConfig.screenHeight -
-              appBar.preferredSize.height -
-              mediaQuery.padding.top) *
+      height: (mediaQuery.size.height -
+          appBar.preferredSize.height -
+          mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
-
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (isLandscape)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Show Chart'),
+                  Text(
+                    'Show Chart',
+                    style: Theme.of(context).textTheme.title,
+                  ),
                   Switch.adaptive(
                     activeColor: Theme.of(context).accentColor,
                     value: _showChart,
@@ -159,14 +176,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         _showChart = val;
                       });
                     },
-                  )
+                  ),
                 ],
               ),
             if (!isLandscape)
               Container(
-                height: (SizeConfig.screenHeight -
-                        appBar.preferredSize.height -
-                        mediaQuery.padding.top) *
+                height: (mediaQuery.size.height -
+                    appBar.preferredSize.height -
+                    mediaQuery.padding.top) *
                     0.3,
                 child: Chart(_recentTransactions),
               ),
@@ -174,23 +191,33 @@ class _MyHomePageState extends State<MyHomePage> {
             if (isLandscape)
               _showChart
                   ? Container(
-                      height: (SizeConfig.screenHeight -
-                              appBar.preferredSize.height -
-                              mediaQuery.padding.top) *
-                          0.7,
-                      child: Chart(_recentTransactions),
-                    )
+                height: (mediaQuery.size.height -
+                    appBar.preferredSize.height -
+                    mediaQuery.padding.top) *
+                    0.7,
+                child: Chart(_recentTransactions),
+              )
                   : txListWidget
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+      child: pageBody,
+      navigationBar: appBar,
+    )
+        : Scaffold(
+      appBar: appBar,
+      body: pageBody,
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Platform.isIOS
           ? Container()
           : FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () => _startAddNewTransaction(context),
-            ),
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(context),
+      ),
     );
   }
 }
