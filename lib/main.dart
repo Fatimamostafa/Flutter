@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_basics/utils/SizeConfig.dart';
 import 'package:flutter_basics/widgets/transaction_list.dart';
 
 import './models/transaction.dart';
-import './widgets/new_transaction.dart';
 import './widgets/chart.dart';
+import './widgets/new_transaction.dart';
 
 void main() {
 /*  SystemChrome.setPreferredOrientations([
@@ -26,21 +27,21 @@ class MyApp extends StatelessWidget {
           // errorColor: Colors.red,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-            title: TextStyle(
-              fontFamily: 'OpenSans',
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-            button: TextStyle(color: Colors.white),
-          ),
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                button: TextStyle(color: Colors.white),
+              ),
           appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
-              title: TextStyle(
-                fontFamily: 'OpenSans',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+                  title: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
           )),
       home: MyHomePage(),
     );
@@ -131,10 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
-    final txListWidget =  Container(
+    final txListWidget = Container(
       height: (SizeConfig.screenHeight -
-          appBar.preferredSize.height -
-          mediaQuery.padding.top) *
+              appBar.preferredSize.height -
+              mediaQuery.padding.top) *
           0.7,
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
@@ -145,44 +146,51 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-           if(isLandscape) Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              Text('Show Chart'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                       _showChart = val;
-                    });
-                  },
-                )
-              ],
-            ),
-            if(!isLandscape) Container(
-              height: (SizeConfig.screenHeight -
-                  appBar.preferredSize.height -
-                  mediaQuery.padding.top) *
-                  0.3,
-              child: Chart(_recentTransactions),
-            ),
-            if(!isLandscape) txListWidget,
-            if(isLandscape) _showChart ? Container(
-              height: (SizeConfig.screenHeight -
-                  appBar.preferredSize.height -
-                  mediaQuery.padding.top) *
-                  0.7,
-              child: Chart(_recentTransactions),
-            ) : txListWidget
+            if (isLandscape)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Show Chart'),
+                  Switch.adaptive(
+                    activeColor: Theme.of(context).accentColor,
+                    value: _showChart,
+                    onChanged: (val) {
+                      setState(() {
+                        _showChart = val;
+                      });
+                    },
+                  )
+                ],
+              ),
+            if (!isLandscape)
+              Container(
+                height: (SizeConfig.screenHeight -
+                        appBar.preferredSize.height -
+                        mediaQuery.padding.top) *
+                    0.3,
+                child: Chart(_recentTransactions),
+              ),
+            if (!isLandscape) txListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: (SizeConfig.screenHeight -
+                              appBar.preferredSize.height -
+                              mediaQuery.padding.top) *
+                          0.7,
+                      child: Chart(_recentTransactions),
+                    )
+                  : txListWidget
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () => _startAddNewTransaction(context),
+            ),
     );
   }
 }
-
