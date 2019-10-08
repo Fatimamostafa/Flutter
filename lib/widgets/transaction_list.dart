@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_basics/utils/SizeConfig.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
@@ -56,7 +57,7 @@ class TransactionList extends StatelessWidget {
                   subtitle: Text(
                     DateFormat.yMMMd().format(transactions[index].date),
                   ),
-                  trailing: MediaQuery.of(context).size.width > 460
+                  trailing: SizeConfig.screenWidth > 460
                       ? FlatButton.icon(
                           onPressed: () => deleteTx(transactions[index].id),
                           icon: Icon(Icons.delete),

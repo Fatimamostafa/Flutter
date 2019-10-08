@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_basics/utils/SizeConfig.dart';
 import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -62,7 +63,7 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             left: 10,
             right: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            bottom: SizeConfig.bottom + 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
