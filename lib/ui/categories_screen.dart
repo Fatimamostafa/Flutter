@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basics/dummy-data.dart';
+import 'package:flutter_basics/models/dummy-data.dart';
 import 'package:flutter_basics/widgets/category_item.dart';
 
 class CategoriesScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class CategoriesScreen extends StatelessWidget {
         padding: EdgeInsets.all(25),
         children: <Widget>[
           ...DUMMY_CATEGORIES
-              .map((catData) => CategoryItem(catData.title, catData.color))
+              .map((catData) => CategoryItem(catData.id, catData.title, catData.color))
               .toList()
         ],
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
