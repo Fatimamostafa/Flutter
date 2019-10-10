@@ -5,7 +5,6 @@ import '../widgets/meal_item.dart';
 class CategoryMealsScreen extends StatelessWidget {
   static const routeName = '/category-meals';
 
-
   @override
   Widget build(BuildContext context) {
     final routeArgs =
@@ -28,7 +27,7 @@ class CategoryMealsScreen extends StatelessWidget {
             imageUrl: categoryMeals[index].imageUrl,
             duration: categoryMeals[index].duration,
             complexity: categoryMeals[index].complexity,
-            affordability: categoryMeals[index].affordability ,
+            affordability: categoryMeals[index].affordability,
           );
       }, itemCount: categoryMeals.length,)
     );
