@@ -54,8 +54,7 @@ class MealDetailScreen extends StatelessWidget {
                 itemBuilder: (ctx, index) => Card(
                   color: Theme.of(context).accentColor,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     child: Text('${selectedMeal.ingredients[index]}'),
                   ),
                 ),
