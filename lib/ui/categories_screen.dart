@@ -5,11 +5,7 @@ import 'package:flutter_basics/widgets/category_item.dart';
 class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('DeliMeal'),
-      ),
-      body: GridView(
+    return GridView(
         padding: EdgeInsets.all(25),
         children: <Widget>[
           ...DUMMY_CATEGORIES
@@ -21,7 +17,6 @@ class CategoriesScreen extends StatelessWidget {
             childAspectRatio: 3 / 2, //For 200 width 300 height
             mainAxisSpacing: 20,
             crossAxisSpacing: 20),
-      ),
-    );
+      );
   }
 }
