@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basics/models/meal.dart';
-import 'package:flutter_basics/ui/category_meals_screen.dart';
 import 'package:flutter_basics/ui/meal_details_screen.dart';
 
 class MealItem extends StatelessWidget {
@@ -10,6 +9,7 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
+  final Function removeItem;
 
   const MealItem(
       {@required this.id,
@@ -17,15 +17,21 @@ class MealItem extends StatelessWidget {
       @required this.imageUrl,
       @required this.duration,
       @required this.complexity,
-      @required this.affordability});
+      @required this.affordability,
+      @required this.removeItem});
 
   void selectMeal(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(MealDetailScreen.routeName,
-    arguments: id);
+    Navigator.of(ctx)
+        .pushNamed(MealDetailScreen.routeName, arguments: id)
+        .then((result) => {
+              // print(result) //After pop function we get this
+              if (result != null)
+                {removeItem(result)}
+            });
   }
 
   String get complexityText {
-    switch(complexity) {
+    switch (complexity) {
       case Complexity.Simple:
         return 'Simple';
         break;
@@ -41,7 +47,7 @@ class MealItem extends StatelessWidget {
   }
 
   String get affordabilityText {
-    switch(affordability) {
+    switch (affordability) {
       case Affordability.Affordable:
         return 'Affordable';
         break;
@@ -85,10 +91,7 @@ class MealItem extends StatelessWidget {
                   child: Container(
                     width: 300,
                     color: Colors.black54,
-                    padding: EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 20
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
                       title,
                       style: TextStyle(
@@ -112,7 +115,6 @@ class MealItem extends StatelessWidget {
                       Icon(Icons.schedule),
                       SizedBox(width: 6),
                       Text('$duration mins')
-
                     ],
                   ),
                   Row(
@@ -120,19 +122,15 @@ class MealItem extends StatelessWidget {
                       Icon(Icons.work),
                       SizedBox(width: 6),
                       Text('$complexityText ')
-
                     ],
                   ),
-
                   Row(
                     children: <Widget>[
                       Icon(Icons.attach_money),
                       SizedBox(width: 6),
                       Text('$affordabilityText ')
-
                     ],
                   ),
-
                 ],
               ),
             )
