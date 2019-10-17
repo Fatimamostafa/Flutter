@@ -5,6 +5,12 @@ import 'package:flutter_basics/utils/SizeConfig.dart';
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
 
+  final Function toggleFav;
+  final Function isFav;
+
+  const MealDetailScreen({this.toggleFav, this.isFav});
+
+
   Widget buildSectionTitle(BuildContext ctx, String text) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -80,10 +86,9 @@ class MealDetailScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.delete),
-        onPressed: () {
-          Navigator.of(context).pop(mealId);
-        },
+        child: Icon(isFav(mealId) ? Icons.favorite : Icons.favorite_border),
+        onPressed: () => toggleFav(mealId),
+         // Navigator.of(context).pop(mealId);
       ),
     );
   }
