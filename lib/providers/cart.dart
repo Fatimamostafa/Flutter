@@ -9,7 +9,7 @@ class Cart with ChangeNotifier {
   }
 
   int get itemCount {
-   return _items.length;
+    return _items.length;
   }
 
   double get totalAmount {
@@ -23,29 +23,33 @@ class Cart with ChangeNotifier {
   void addItem(String productId, String title, double price) {
     notifyListeners();
 
-    if(_items.containsKey(productId)) {
-      items.update(productId, (existingCartItem) => CartItem(
-        id: existingCartItem.id,
-        title: existingCartItem.title,
-        quantity: existingCartItem.quantity + 1,
-        price: existingCartItem.price
-      ));
+    if (_items.containsKey(productId)) {
+      items.update(
+          productId,
+          (existingCartItem) => CartItem(
+              id: existingCartItem.id,
+              title: existingCartItem.title,
+              quantity: existingCartItem.quantity + 1,
+              price: existingCartItem.price));
+    } else {
+      _items.putIfAbsent(
+          productId,
+          () => CartItem(
+              id: DateTime.now().toString(),
+              title: title,
+              quantity: 1,
+              price: price));
     }
-
-    else {
-      _items.putIfAbsent(productId, () => CartItem(
-        id: DateTime.now().toString(),
-        title: title,
-        quantity: 1,
-        price: price
-      ));
-    }
-
   }
 
   void removeItem(String productId) {
-      _items.remove(productId);
-      notifyListeners();
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = {};
+    notifyListeners();
   }
 
 }
