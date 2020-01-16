@@ -3,8 +3,10 @@ import 'package:flutter_basics/providers/cart.dart';
 import 'package:flutter_basics/providers/orders.dart';
 import 'package:flutter_basics/providers/products.dart';
 import 'package:flutter_basics/screens/cart_screen.dart';
+import 'package:flutter_basics/screens/edit_product_screen.dart';
 import 'package:flutter_basics/screens/orders_screen.dart';
 import 'package:flutter_basics/screens/product_details_screen.dart';
+import 'package:flutter_basics/screens/user_products_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/products_overview_screen.dart';
@@ -37,6 +39,8 @@ class MyApp extends StatelessWidget {
           ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
           OrdersScreen.routeName: (ctx) => OrdersScreen(),
+          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+          EditProductScreen.routeName: (ctx) => EditProductScreen(),
         },
       ),
     );
