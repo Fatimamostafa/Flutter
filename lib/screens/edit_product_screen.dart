@@ -3,7 +3,7 @@ import 'package:flutter_basics/providers/product.dart';
 import 'package:flutter_basics/providers/products.dart';
 import 'package:provider/provider.dart';
 
-class EditProductScreen extends StatefulWidget {
+class  EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
 
   @override
@@ -89,7 +89,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
-    final isValid = _form.currentState.validate()
+    final isValid = _form.currentState.validate();
     if (!isValid)
       return;
 
@@ -226,7 +226,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      initialValue: _initValues['imageUrl'],
                       decoration: InputDecoration(labelText: 'Image URL'),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
