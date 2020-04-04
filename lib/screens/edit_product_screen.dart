@@ -233,7 +233,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 ),
                         ),
                         Expanded(
-                          child: TextFormField(
+                          child:  TextFormField(
                             decoration: InputDecoration(labelText: 'Image URL'),
                             keyboardType: TextInputType.url,
                             textInputAction: TextInputAction.done,
