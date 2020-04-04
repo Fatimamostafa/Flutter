@@ -18,6 +18,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
 
   var _isInit = true;
+  var _isLoading = false ;
 
   var _editedProduct = Product(
       id: null,
@@ -94,14 +95,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
 
     _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
 
     if (_editedProduct.id != null) {
       Provider.of<Products>(context, listen: false).updateProduct(
           _editedProduct.id, _editedProduct);
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.of(context).pop();
     }
     else {
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct).then((_){
+      Provider.of<Products>(context, listen: false).addProduct(_editedProduct)
+          .catchError((error){
+          showDialog(
+            context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occured'),
+            content: Text('Something went wrong'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          ));
+      })
+          .then((_){
+        setState(() {
+          _isLoading = false;
+        });
         Navigator.of(context).pop();
       });
     }
@@ -119,7 +144,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
             onPressed: _saveForm,),
         ],
       ),
-      body: Padding(
+      body: _isLoading ? Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _form,
