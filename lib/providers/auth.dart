@@ -26,6 +26,13 @@ class Auth with ChangeNotifier {
     return _userId;
   }
 
+  void logout() {
+    _userId = null;
+    _expiryDate = null;
+    _token = null;
+    notifyListeners();
+  }
+
   Future<void> signup(String email, String pass) async {
     return _authenticate(email, pass, 'signUp');
   }
@@ -58,4 +65,6 @@ class Auth with ChangeNotifier {
       throw error;
     }
   }
+
+
 }
