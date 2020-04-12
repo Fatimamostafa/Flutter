@@ -22,6 +22,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return _userId;
+  }
+
   Future<void> signup(String email, String pass) async {
     return _authenticate(email, pass, 'signUp');
   }
