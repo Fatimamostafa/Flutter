@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_basics/models/http_exception.dart';
+import 'package:flutter_basics/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -100,7 +103,21 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context, builder: (ctx) => AlertDialog(
+      title: Text('An Error Occured'),
+      content: Text(message),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('Okay'),
+          onPressed: () => Navigator.pop(context)
+        )
+      ],
+    ));
+  }
+
+  Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
       return;
@@ -109,10 +126,35 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false)
+            .login(_authData['email'], _authData['password']);
+      } else {
+        // Sign user up
+        print('${_authData['email']} --- ${_authData['password']}');
+        await Provider.of<Auth>(context, listen: false)
+            .signup(_authData['email'], _authData['password']);
+      }
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication failed';
+      if(error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address exists.';
+      }
+      else if(error.toString().contains('INVALID_EMAIL')){
+        errorMessage = 'This is not a valid email address';
+      }
+      else if(error.toString().contains('WEAK_PASS')) {
+        errorMessage = 'This pass is weak';
+      }
+      else if(error.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'This pass is invalid';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+        const errorMessage = 'Couldn\'t authenticate';
+        _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
