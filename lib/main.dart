@@ -10,6 +10,7 @@ import 'package:flutter_basics/screens/orders_screen.dart';
 import 'package:flutter_basics/screens/product_details_screen.dart';
 import 'package:flutter_basics/screens/splash_screen.dart';
 import 'package:flutter_basics/screens/user_products_screen.dart';
+import 'package:flutter_basics/widgets/custom_route.dart';
 import 'package:provider/provider.dart';
 
 import './screens/products_overview_screen.dart';
@@ -39,7 +40,12 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 primarySwatch: Colors.purple,
                 accentColor: Colors.deepOrange,
-                fontFamily: 'Lato'),
+                fontFamily: 'Lato',
+              pageTransitionsTheme: PageTransitionsTheme(builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+                TargetPlatform.iOS: CustomPageTransitionBuilder(),
+              })
+            ),
             home: auth.isAuth
                 ? ProductsOverviewScreen()
                 : FutureBuilder(
