@@ -93,7 +93,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -102,19 +103,43 @@ class _AuthCardState extends State<AuthCard> {
   };
   var _isLoading = false;
   final _passwordController = TextEditingController();
+  var containerHeight = 260;
+  AnimationController _animationController;
+  Animation<Size> _heightAnimation;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _heightAnimation = Tween<Size>(
+            begin: Size(double.infinity, 250), end: Size(double.infinity, 320))
+        .animate(CurvedAnimation(
+            parent: _animationController, curve: Curves.fastOutSlowIn));
+    _heightAnimation.addListener(() => setState(() {}));
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _animationController.dispose();
+  }
 
   void _showErrorDialog(String message) {
     showDialog(
-      context: context, builder: (ctx) => AlertDialog(
-      title: Text('An Error Occured'),
-      content: Text(message),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('Okay'),
-          onPressed: () => Navigator.pop(context)
-        )
-      ],
-    ));
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text('An Error Occured'),
+              content: Text(message),
+              actions: <Widget>[
+                FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () => Navigator.pop(context))
+              ],
+            ));
   }
 
   Future<void> _submit() async {
@@ -139,22 +164,19 @@ class _AuthCardState extends State<AuthCard> {
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
-      if(error.toString().contains('EMAIL_EXISTS')) {
+      if (error.toString().contains('EMAIL_EXISTS')) {
         errorMessage = 'This email address exists.';
-      }
-      else if(error.toString().contains('INVALID_EMAIL')){
+      } else if (error.toString().contains('INVALID_EMAIL')) {
         errorMessage = 'This is not a valid email address';
-      }
-      else if(error.toString().contains('WEAK_PASS')) {
+      } else if (error.toString().contains('WEAK_PASS')) {
         errorMessage = 'This pass is weak';
-      }
-      else if(error.toString().contains('INVALID_PASSWORD')) {
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = 'This pass is invalid';
       }
       _showErrorDialog(errorMessage);
     } catch (error) {
-        const errorMessage = 'Couldn\'t authenticate';
-        _showErrorDialog(errorMessage);
+      const errorMessage = 'Couldn\'t authenticate';
+      _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
@@ -166,10 +188,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+      _animationController.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      _animationController.reverse();
     }
   }
 
@@ -182,9 +206,10 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+      //  height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _heightAnimation.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _heightAnimation.value.height),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
