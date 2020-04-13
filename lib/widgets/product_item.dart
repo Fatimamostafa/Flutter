@@ -27,8 +27,9 @@ class ProductItem extends StatelessWidget {
               .pushNamed(ProductDetailsScreen.routeName, arguments: product.id);
         },
         child: GridTile(
-          child: Image.network(
-            product.imageUrl,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/images/original.png'),
+            image: NetworkImage(product.imageUrl),
             fit: BoxFit.cover,
           ),
           footer: GridTileBar(
